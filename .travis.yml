@@ -1,15 +1,35 @@
-language: python
-python:
-    - 2.7
-    - 3.2
-    - 3.5
+language: go
+go_import_path: github.com/bailantaotao/test-github
+sudo: required
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      go: 1.7.x
+      script:
+        - go test -v $(glide novendor | grep -v "\.\/tests\/\.\.\.")
 
-services:
-  - docker
+    - os: linux
+      dist: trusty
+      sudo: required
+      go: 1.8.x
+      script:
+        - go test -v $(glide novendor | grep -v "\.\/tests\/\.\.\.")
+
+    # These are the latest Go versions.
+    - os: linux
+      dist: trusty
+      sudo: required
+      go: 1.9.x
+      script:
+        - go test -v $(glide novendor | grep -v "\.\/tests\/\.\.\.") 
+
+    - os: osx
+      go: 1.9.x
+      sudo: required
+      script:
+        - go test -v $(glide novendor | grep -v "\.\/tests\/\.\.\.")
 
 install:
-    - docker build -t blog .
-    - docker run -d -p 127.0.0.1:80:80 --name blog blog
-
-script:
-  - docker ps | grep -q blog
+  - go get github.com/Masterminds/glide
